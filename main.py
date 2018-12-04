@@ -7,27 +7,32 @@ from yahoo_fin import stock_info as si
 
 import lib
 
-currentPrice = si.get_live_price("aapl")
+#currentPrice = si.get_live_price("aapl")
 
 tickers = ["aapl","nvda","amzn"]
 
-sd = '11/26/2018'
-ed = '11/30/2018'
+sd = '11/3/2018'
+ed = '12/3/2018'
 
-data = si.get_data("aapl", start_date=sd, end_date=ed)
+tckr = "pypl"
+currentPrice = 85.09 #si.get_live_price(tckr)
 
-index = si.get_data("^gspc", start_date=sd, end_date=ed)
+volatility = lib.getVolatilityTickerTime(tckr,sd,ed)
 
-def returnPriceArray(data, index=1):
-    op = data.as_matrix()
-    out = []
-    for a in op:
-        out.append(a[index])
-    return out
+print(currentPrice)
 
-aaplOpen = returnPriceArray(data)
-snpOpen = returnPriceArray(index)
+option = m.BS([currentPrice,86,2.25,17], volatility=(volatility*100))
 
-r2 = lib.r2(aaplOpen, snpOpen)
-
-print(r2)
+print()
+print("Volatility ", volatility)
+print()
+print("Call Price ", option.callPrice)
+print()
+print("Delta ", option.callDelta)
+print("Gamma ", option.gamma)
+print("Theta ", option.callTheta)
+print("Vega ", option.vega)
+print("Rho ", option.callRho)
+print()
+print()
+print()
