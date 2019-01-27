@@ -5,34 +5,35 @@ import numpy
 import mibian as m
 from yahoo_fin import stock_info as si
 
-import lib
+import lib as lib
 
-#currentPrice = si.get_live_price("aapl")
+pd.set_option('display.max_columns', 30)
 
-tickers = ["aapl","nvda","amzn"]
+#["TRP","EC","MPLX","FLT","IBKR","WEC","IMO","CQP","VRSK","CHKP","PBA","RMD"]
+screener = []
+
+traweek = ["TPL","MO","EV","LSTR","PAYX","MMM","HSY","ROL","FDS","SHW","PEP","TJX","ACN"]
+
+pharma = ["SPHS","CRSP","SGMO","NTLA","ACRX","ARNA","FLDM","ILMN","PACB","QGEN","ATHN","INVE","AMRN","EDIT","CELG","BIIB","REGN"]
+
+tickers = screener + traweek + pharma
 
 sd = '11/3/2018'
-ed = '12/3/2018'
+ed = '15/1/2019'
 
-tckr = "pypl"
-currentPrice = 85.09 #si.get_live_price(tckr)
+print("running")
 
-volatility = lib.getVolatilityTickerTime(tckr,sd,ed)
+screenerFrame = lib.dataFrameForTickers(screener, sd, ed)
+pharmaFrame = lib.dataFrameForTickers(pharma, sd, ed)
+traweekFrame = lib.dataFrameForTickers(traweek, sd, ed)
 
-print(currentPrice)
+frames = [screenerFrame, pharmaFrame, traweekFrame]
 
-option = m.BS([currentPrice,86,2.25,17], volatility=(volatility*100))
+writer = pd.ExcelWriter("output.xlsx")
+screenerFrame.to_excel(writer,"Screener")
+#pharmaFrame.to_excel(writer,"Pharma")
+#traweekFrame.to_excel(writer,"Traweek")
+writer.save()
 
 print()
-print("Volatility ", volatility)
-print()
-print("Call Price ", option.callPrice)
-print()
-print("Delta ", option.callDelta)
-print("Gamma ", option.gamma)
-print("Theta ", option.callTheta)
-print("Vega ", option.vega)
-print("Rho ", option.callRho)
-print()
-print()
-print()
+print("End File")
